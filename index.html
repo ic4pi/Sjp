@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SWEAR JAR</title>
+<style>
+  :root{
+    --ink:#f2f2f2;
+    --cyan:#4fd8ee;
+    --gold:#ffd23f;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#000;overflow:hidden;
+    font-family:'Courier New',ui-monospace,monospace;
+    -webkit-font-smoothing:antialiased}
+  body{display:flex;align-items:center;justify-content:center}
+
+  /* ---------- doodle field ---------- */
+  #field{position:fixed;inset:0;z-index:0;pointer-events:none}
+  .doodle{position:absolute;opacity:0;animation:fadein 1.2s ease forwards}
+  .doodle svg{display:block;overflow:visible}
+  .doodle .draw{fill:none;stroke:var(--ink);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;
+    stroke-dasharray:var(--len);stroke-dashoffset:var(--len);
+    animation:draw 2.4s ease forwards}
+  .doodle .accent{stroke:var(--cyan)}
+  .doodle .fill-accent{fill:var(--cyan);stroke:none}
+  .doodle .fill-ink{fill:var(--ink);stroke:none}
+  .doodle.float{animation:fadein 1.2s ease forwards, drift var(--dur,9s) ease-in-out var(--del,2.4s) infinite alternate}
+  @keyframes fadein{to{opacity:.9}}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  @keyframes drift{
+    0%{transform:translate(0,0) rotate(0deg)}
+    50%{transform:translate(var(--dx,8px),var(--dy,-10px)) rotate(var(--rot,3deg))}
+    100%{transform:translate(calc(var(--dx,8px)*-1),var(--dy,-10px)) rotate(calc(var(--rot,3deg)*-1)}
+  }
+
+  /* ---------- sparkle particles ---------- */
+  .spark{position:absolute;width:3px;height:3px;border-radius:50%;
+    background:var(--cyan);opacity:0;animation:rise var(--t,7s) linear infinite}
+  .spark.gold{background:var(--gold)}
+  @keyframes rise{
+    0%{opacity:0;transform:translateY(0) scale(.6)}
+    15%{opacity:.9}
+    100%{opacity:0;transform:translateY(-90vh) scale(1.1)}
+  }
+
+  /* ---------- center stage ---------- */
+  #stage{position:relative;z-index:2;text-align:center;padding:0 20px}
+  #wordmark{display:flex;align-items:flex-end;justify-content:center;gap:.5vw;
+    font-size:clamp(44px,9vw,120px);font-weight:700;letter-spacing:.06em;
+    color:var(--ink);user-select:none}
+  .ch{display:inline-block;opacity:0;transform:translateY(24px);
+    animation:chup .8s cubic-bezier(.2,.9,.3,1.2) forwards}
+  @keyframes chup{to{opacity:1;transform:translateY(0)}}
+
+  /* the magical jar: cap, glass outline, glowing A */
+  .jar{width:clamp(52px,8vw,110px);height:auto;margin:0 .4vw;
+    opacity:0;animation:fadein 1.2s ease .9s forwards}
+  .jar .cap{fill:var(--gold)}
+  .jar .glass{fill:none;stroke:var(--ink);stroke-width:5;stroke-linecap:round;stroke-linejoin:round;
+    stroke-dasharray:620;stroke-dashoffset:620;animation:draw 2s ease 1.1s forwards}
+  .jar .letterA{fill:none;stroke:var(--gold);stroke-width:7;stroke-linecap:round;stroke-linejoin:round;
+    stroke-dasharray:340;stroke-dashoffset:340;animation:draw 1.6s ease 1.9s forwards;
+    filter:drop-shadow(0 0 6px rgba(255,210,63,.9))}
+  .jar .shine{fill:none;stroke:rgba(255,255,255,.55);stroke-width:3;stroke-linecap:round;
+    stroke-dasharray:120;stroke-dashoffset:120;animation:draw 1.2s ease 2.6s forwards}
+  .jar .halo{opacity:0;animation:halo 3.2s ease-in-out 3s infinite}
+  @keyframes halo{0%,100%{opacity:0}50%{opacity:.5}}
+
+  #tag{opacity:0;margin-top:26px;color:var(--cyan);
+    font-size:clamp(11px,1.4vw,14px);letter-spacing:.42em;text-transform:uppercase;
+    animation:fadein 1.4s ease 2.6s forwards}
+
+  #email{display:inline-block;margin-top:44px;opacity:0;
+    color:var(--ink);text-decoration:none;font-size:clamp(14px,1.8vw,19px);
+    letter-spacing:.14em;border-bottom:1px solid rgba(255,255,255,.35);
+    padding-bottom:5px;animation:fadein 1.4s ease 3.1s forwards;transition:.3s}
+  #email:hover{color:var(--gold);border-color:var(--gold);
+    text-shadow:0 0 14px rgba(255,210,63,.7)}
+
+  /* soft magical glow behind the jar letters */
+  .glow{position:absolute;left:50%;top:44%;width:46vmin;height:46vmin;z-index:1;
+    transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;
+    background:radial-gradient(circle,rgba(79,216,238,.10),rgba(255,210,63,.05) 45%,transparent 70%);
+    animation:breathe 6s ease-in-out infinite;opacity:0;animation-delay:2.4s}
+  @keyframes breathe{0%{opacity:0;transform:translate(-50%,-50%) scale(.85)}
+    50%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}
+    100%{opacity:0;transform:translate(-50%,-50%) scale(.85)}}
+</style>
+</head>
+<body>
+
+<canvas id="field"></canvas>
+<div class="glow"></div>
+
+<div id="stage">
+  <div id="wordmark" aria-label="SWEAR JAR">
+    <span class="ch" style="animation-delay:.15s">S</span>
+    <span class="ch" style="animation-delay:.25s">W</span>
+    <span class="ch" style="animation-delay:.35s">E</span>
+    <!-- magical jar replaces A -->
+    <svg class="jar" viewBox="0 0 100 150" aria-hidden="true">
+      <ellipse class="halo" cx="50" cy="80" rx="46" ry="58" fill="rgba(255,210,63,.14)"/>
+      <rect class="cap" x="30" y="6" width="40" height="16" rx="6"/>
+      <path class="glass" d="M32 26 L68 26 L74 36 Q80 46 80 60 L80 122 Q80 140 62 140 L38 140 Q20 140 20 122 L20 60 Q20 46 26 36 Z"/>
+      <path class="letterA" d="M35 122 L50 62 L65 122 M41 102 L59 102"/>
+      <path class="shine" d="M28 52 Q26 60 26 72 L26 108"/>
+    </svg>
+    <span class="ch" style="animation-delay:.45s">R</span>
+    <span style="width:1.2vw"></span>
+    <span class="ch" style="animation-delay:.6s">J</span>
+    <!-- magical jar replaces A -->
+    <svg class="jar" viewBox="0 0 100 150" aria-hidden="true">
+      <ellipse class="halo" cx="50" cy="80" rx="46" ry="58" fill="rgba(79,216,238,.12)"/>
+      <rect class="cap" x="30" y="6" width="40" height="16" rx="6"/>
+      <path class="glass" d="M32 26 L68 26 L74 36 Q80 46 80 60 L80 122 Q80 140 62 140 L38 140 Q20 140 20 122 L20 60 Q20 46 26 36 Z"/>
+      <path class="letterA" d="M35 122 L50 62 L65 122 M41 102 L59 102"/>
+      <path class="shine" d="M28 52 Q26 60 26 72 L26 108"/>
+    </svg>
+    <span class="ch" style="animation-delay:.7s">R</span>
+  </div>
+
+  <div id="tag">tics &amp; jokes</div>
+
+  <a id="email" href="mailto:hello@swearjar.com">hello@swearjar.com</a>
+</div>
+
+<script>
+/* ---- doodle generator: line-art icons scattered like image 3 ---- */
+const ICONS = [
+  // microphone
+  `<svg width="54" height="86" viewBox="0 0 54 86"><path class="draw" pathLength="100" style="--len:100" d="M27 6 a10 14 0 0 1 10 14 v14 a10 14 0 0 1 -20 0 v-14 a10 14 0 0 1 10 -14 z M17 34 h20 M27 48 v14 M15 70 h24 M27 62 v16 M19 62 l-4 8 M35 62 l4 8"/><path class="draw accent" pathLength="100" style="--len:100" d="M10 22 q-5 3 -6 8 M44 22 q5 3 6 8"/></svg>`,
+  // brain
+  `<svg width="80" height="64" viewBox="0 0 80 64"><path class="draw" pathLength="100" style="--len:100" d="M30 8 q-14 0 -16 12 q-10 4 -6 14 q-4 10 8 14 q2 10 16 8 q6 8 14 2 q10 4 14 -6 q12 -2 10 -14 q8 -8 -2 -16 q0 -12 -14 -12 q-4 -6 -10 -2 q-6 -6 -12 0 z M40 12 v40 M28 20 q8 2 8 8 M52 20 q-8 2 -8 8 M26 42 q8 -2 10 4 M54 42 q-8 -2 -10 4"/></svg>`,
+  // star
+  `<svg width="46" height="46" viewBox="0 0 46 46"><path class="draw" pathLength="100" style="--len:100" d="M23 4 L28 17 L42 18 L31 27 L35 41 L23 33 L11 41 L15 27 L4 18 L18 17 Z"/></svg>`,
+  // lightning bolt
+  `<svg width="40" height="64" viewBox="0 0 40 64"><path class="draw accent" pathLength="100" style="--len:100" d="M26 4 L8 36 L19 36 L13 60 L34 26 L23 26 Z"/></svg>`,
+  // speech bubble HA HA
+  `<svg width="86" height="64" viewBox="0 0 86 64"><path class="draw" pathLength="100" style="--len:100" d="M8 8 h54 a8 8 0 0 1 8 8 v22 a8 8 0 0 1 -8 8 h-30 l-12 10 v-10 h-12 a8 8 0 0 1 -8 -8 v-22 a8 8 0 0 1 8 -8 z M20 24 v14 M28 24 v14 M20 30 h8 M44 24 v14 M52 24 v14 M44 30 h8"/></svg>`,
+  // awareness ribbon
+  `<svg width="42" height="72" viewBox="0 0 42 72"><path class="draw accent" pathLength="100" style="--len:100" d="M12 6 L32 6 L26 32 L34 66 L22 50 L14 66 L20 32 Z"/></svg>`,
+  // comedy masks (original simple take)
+  `<svg width="70" height="72" viewBox="0 0 70 72"><path class="draw" pathLength="100" style="--len:100" d="M10 10 q18 -6 24 6 q-2 20 -12 26 q-10 -4 -12 -32 z M46 10 q-8 26 2 40 q4 12 16 8 q4 -2 2 -8 q-10 2 -12 -8 q-8 -14 -8 -32 z M17 20 q3 -2 6 0 M27 20 q3 -2 6 0 M18 30 q6 5 12 0"/></svg>`,
+  // stool + water bottle
+  `<svg width="66" height="86" viewBox="0 0 66 86"><path class="draw" pathLength="100" style="--len:100" d="M12 40 h42 M18 40 l-6 34 M48 40 l6 34 M14 62 h38 M26 40 v-10 M40 40 v-10 M33 14 q-6 0 -6 6 v8 h12 v-8 q0 -6 -6 -6 z M29 20 h8"/></svg>`,
+  // high-top shoe
+  `<svg width="86" height="56" viewBox="0 0 86 56"><path class="draw" pathLength="100" style="--len:100" d="M10 40 q-2 -16 6 -22 q2 -8 10 -8 q6 0 8 6 l2 8 q14 2 24 8 q10 4 14 8 l4 4 q2 6 -4 6 h-58 q-4 0 -6 -4 z M18 24 l10 -4 M20 32 l12 -4"/><circle class="fill-accent" cx="30" cy="16" r="2.5"/></svg>`,
+  // notebook
+  `<svg width="58" height="72" viewBox="0 0 58 72"><path class="draw" pathLength="100" style="--len:100" d="M12 6 h36 v60 h-36 z M12 6 q-6 0 -6 6 v48 q0 6 6 6 M20 18 h20 M20 28 h20 M20 38 h14"/></svg>`,
+  // middle finger (swear jar tax)
+  `<svg width="44" height="72" viewBox="0 0 44 72"><path class="draw" pathLength="100" style="--len:100" d="M18 66 v-30 q0 -8 4 -8 q4 0 4 8 v12 M26 48 v-22 q0 -6 4 -6 q4 0 4 6 v22 M34 48 v-16 q0 -5 4 -5 q4 0 4 5 v18 q0 18 -14 18 q-12 0 -14 -12 l-2 -14 q-1 -7 4 -7 q5 0 5 6 z"/></svg>`,
+  // stage spotlight
+  `<svg width="70" height="70" viewBox="0 0 70 70"><path class="draw accent" pathLength="100" style="--len:100" d="M35 8 v10 M35 52 v10 M8 35 h10 M52 35 h10 M16 16 l7 7 M47 47 l7 7 M54 16 l-7 7 M23 47 l-7 7"/><circle class="draw" pathLength="100" style="--len:100" cx="35" cy="35" r="9"/></svg>`,
+  // tic happens scrawl
+  `<svg width="120" height="50" viewBox="0 0 120 50"><path class="draw" pathLength="100" style="--len:100" d="M8 36 q10 -26 18 -2 M30 34 l10 -18 l2 18 M46 32 q6 -20 12 -4 q4 10 -4 10 q-6 0 -8 -6 M64 30 q8 -18 14 -2 q3 8 -4 8 M86 28 l8 -14 l4 16 M102 22 q10 -8 10 2 q0 8 -8 6"/></svg>`,
+  // eye
+  `<svg width="70" height="40" viewBox="0 0 70 40"><path class="draw" pathLength="100" style="--len:100" d="M4 20 q31 -22 62 0 q-31 22 -62 0 z"/><circle class="draw accent" pathLength="100" style="--len:100" cx="35" cy="20" r="8"/></svg>`
+];
+
+function scatter(){
+  const field = document.getElementById('field');
+  const w = innerWidth, h = innerHeight;
+  // keep the middle clear-ish for the logo
+  const cx = w/2, cy = h/2;
+  const n = Math.min(ICONS.length, Math.max(8, Math.floor(w*h/90000)));
+  const picks = [...ICONS].sort(()=>Math.random()-.5).slice(0,n);
+  picks.forEach((svg,i)=>{
+    const d = document.createElement('div');
+    d.className = 'doodle float';
+    d.innerHTML = svg;
+    let x,y,tries=0;
+    do{
+      x = Math.random()*(w-120)+20;
+      y = Math.random()*(h-140)+20;
+      tries++;
+    }while(Math.hypot(x+40-cx, y+40-cy) < Math.min(w,h)*0.32 && tries<20);
+    d.style.left = x+'px'; d.style.top = y+'px';
+    d.style.setProperty('--dur',(7+Math.random()*5)+'s');
+    d.style.setProperty('--del',(1.5+Math.random()*2)+'s');
+    d.style.setProperty('--dx',(Math.random()*16-8)+'px');
+    d.style.setProperty('--dy',(Math.random()*-14-4)+'px');
+    d.style.setProperty('--rot',(Math.random()*5-2.5)+'deg');
+    d.style.animationDelay = (Math.random()*1.4)+'s';
+    field.appendChild(d);
+  });
+  // sparkle particles
+  for(let i=0;i<26;i++){
+    const s = document.createElement('div');
+    s.className = 'spark' + (Math.random()<.3 ? ' gold' : '');
+    s.style.left = Math.random()*100+'vw';
+    s.style.top = (55+Math.random()*45)+'vh';
+    s.style.setProperty('--t',(5+Math.random()*6)+'s');
+    s.style.animationDelay = (Math.random()*6)+'s';
+    field.appendChild(s);
+  }
+}
+addEventListener('resize',()=>{document.getElementById('field').innerHTML='';scatter();});
+scatter();
+</script>
+</body>
+</html>
