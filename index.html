@@ -17,7 +17,7 @@
 
   /* the jar — levitating, glowing */
   #jar-wrap{position:relative;display:inline-block}
-  #jar{display:block;width:clamp(150px,30vh,260px);height:auto;
+  #jar{display:block;width:clamp(80px,15vh,140px);height:auto;
     filter:drop-shadow(0 0 26px rgba(255,210,63,.5)) drop-shadow(0 0 80px rgba(79,216,238,.22));
     animation:levitate 5.5s ease-in-out infinite, arrive 1.6s cubic-bezier(.2,.9,.3,1.1) both}
   @keyframes arrive{from{opacity:0;transform:translateY(40px) scale(.85)}to{opacity:1;transform:none}}
@@ -52,9 +52,9 @@
 
 <div id="stage">
   <div id="jar-wrap">
-    <div class="orbit"   style="--st:8s"><i style="--ox:96px"></i></div>
-    <div class="orbit c" style="--st:12s;animation-direction:reverse"><i style="--ox:-76px;--oy:34px"></i></div>
-    <div class="orbit"   style="--st:15s"><i style="--ox:70px;--oy:-52px"></i></div>
+    <div class="orbit"   style="--st:8s"><i style="--ox:56px"></i></div>
+    <div class="orbit c" style="--st:12s;animation-direction:reverse"><i style="--ox:-44px;--oy:20px"></i></div>
+    <div class="orbit"   style="--st:15s"><i style="--ox:40px;--oy:-30px"></i></div>
     <img id="jar" src="logo.png" alt="Swear Jar logo" width="360" height="626">
   </div>
   <img id="wordmark" src="wordmark.png" alt="SWEAR JAR" width="1100" height="193">
