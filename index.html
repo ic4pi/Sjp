@@ -16,26 +16,23 @@
     display:flex;align-items:center;justify-content:center;cursor:pointer;
     animation:introOut .8s ease 2s forwards}
   @keyframes introOut{to{opacity:0;visibility:hidden}}
-  #intro img{width:clamp(120px,28vh,220px);height:auto;
-    filter:drop-shadow(0 0 30px rgba(255,210,63,.55)) drop-shadow(0 0 90px rgba(79,216,238,.25));
+  #intro img{width:clamp(80px,16vh,140px);height:auto;
+    filter:drop-shadow(0 0 22px rgba(255,210,63,.45)) drop-shadow(0 0 70px rgba(79,216,238,.2));
     animation:powerup 2s linear both}
-  /* neon power-on: sputters, surges, steadies */
+  /* soft neon power-on: gentle stutters, settles */
   @keyframes powerup{
-    0%{opacity:0}
-    4%{opacity:.7} 7%{opacity:.1} 10%{opacity:.9} 13%{opacity:.2}
-    18%{opacity:1} 22%{opacity:.35} 26%{opacity:1}
-    34%{opacity:.5} 38%{opacity:1}
-    55%{opacity:1;transform:scale(1)}
-    70%{opacity:1;transform:scale(1.04)}
-    100%{opacity:1;transform:scale(1.08)}
+    0%{opacity:0;transform:scale(.96)}
+    8%{opacity:.55} 13%{opacity:.2} 18%{opacity:.75}
+    23%{opacity:.45} 29%{opacity:.9} 35%{opacity:.7}
+    42%,100%{opacity:1;transform:scale(1)}
   }
 
   /* ============ LANDING: wordmark + email ============ */
-  #stage{text-align:center;padding:0 20px;
+  #stage{text-align:center;padding:0 20px;width:100%;
     opacity:0;animation:fadein .8s ease 2s forwards}
   @keyframes fadein{to{opacity:1}}
 
-  #wordmark{display:block;width:clamp(280px,62vw,620px);height:auto;
+  #wordmark{display:inline-block;width:clamp(280px,62vw,620px);height:auto;margin-top:26px;
     filter:drop-shadow(0 0 12px rgba(255,255,255,.15));
     opacity:0;transform:translateY(18px);
     animation:rise 1s cubic-bezier(.2,.9,.3,1.1) 2.2s forwards;
