@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SWEAR JAR — Book the Show</title>
+<style>
+  :root{ --ink:#f2f2f2; --gold:#ffd23f; --dim:rgba(242,242,242,.55); }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#000;color:var(--ink);
+    font-family:'Courier New',ui-monospace,monospace;
+    -webkit-font-smoothing:antialiased;text-align:center;padding:70px 20px 90px}
+
+  #wordmark{width:clamp(240px,44vw,460px);height:auto;
+    filter:drop-shadow(0 0 12px rgba(255,255,255,.15))}
+  #tag{margin-top:20px;font-size:clamp(10px,1.2vw,13px);letter-spacing:.3em;
+    text-transform:uppercase;color:var(--dim)}
+
+  h2{margin:70px 0 8px;font-size:clamp(13px,1.6vw,17px);letter-spacing:.4em;
+    text-transform:uppercase;color:var(--ink)}
+  #roster-sub{font-size:clamp(11px,1.3vw,14px);letter-spacing:.14em;color:var(--dim)}
+  #roster-sub em{color:var(--gold);font-style:normal}
+
+  /* ---- roster grid ---- */
+  #grid{display:flex;flex-wrap:wrap;justify-content:center;gap:44px 36px;
+    max-width:1060px;margin:56px auto 0}
+  .card{width:250px}
+  .card img{width:190px;height:190px;border-radius:50%;object-fit:cover;
+    border:2px solid rgba(255,210,63,.55);
+    box-shadow:0 0 24px rgba(255,210,63,.22), 0 0 60px rgba(79,216,238,.10);
+    transition:.3s}
+  .card img:hover{border-color:var(--gold);
+    box-shadow:0 0 34px rgba(255,210,63,.5), 0 0 80px rgba(79,216,238,.2)}
+  .card .name{margin-top:18px;font-size:16px;letter-spacing:.1em;font-weight:700}
+  .card .bio{margin-top:8px;font-size:12px;line-height:1.55;color:var(--dim);
+    min-height:56px}
+  .card .cred{margin-top:10px;font-size:11px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--gold)}
+  .card.tba img{border-style:dashed;opacity:.35;
+    box-shadow:none;filter:grayscale(1) brightness(.5)}
+  .card.tba .name{color:var(--dim)}
+
+  /* ---- booking footer ---- */
+  #book{margin-top:90px}
+  #book a{display:inline-block;color:var(--ink);text-decoration:none;
+    font-size:clamp(15px,2vw,20px);letter-spacing:.16em;
+    border:1px solid rgba(255,210,63,.5);padding:14px 34px;
+    transition:.3s}
+  #book a:hover{color:var(--gold);border-color:var(--gold);
+    box-shadow:0 0 24px rgba(255,210,63,.35);text-shadow:0 0 12px rgba(255,210,63,.7)}
+  #book .note{margin-top:18px;font-size:11px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--dim)}
+  #home{display:inline-block;margin-top:44px;font-size:11px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--dim);text-decoration:none}
+  #home:hover{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<img id="wordmark" src="wordmark.png" alt="SWEAR JAR" width="1100" height="193">
+<div id="tag">Swear to fill jars. Sworn to fill venues.</div>
+
+<h2>The Roster</h2>
+<div id="roster-sub">Six comics — every one <em>earned a book</em> on <em>Kill Tony</em>.</div>
+
+<div id="grid">
+
+  <div class="card">
+    <img src="zachariah.png" alt="Zachariah Tourette's Tippett">
+    <div class="name">Zachariah "Tourette's" Tippett</div>
+    <div class="bio">Turns life with Tourette syndrome into sharp, unapologetic comedy. Fearless storyteller, four-time Kill Tony guest.</div>
+    <div class="cred">Book winner on Kill Tony</div>
+  </div>
+
+  <div class="card">
+    <img src="drew.png" alt="Drew Blues">
+    <div class="name">Drew Blues</div>
+    <div class="bio">Texas-born, Texas-raised, Texas funny. High-energy storytelling with a uniquely South Texas voice.</div>
+    <div class="cred">Book winner on Kill Tony</div>
+  </div>
+
+  <div class="card">
+    <img src="bigal.png" alt="Big Al Gonzales">
+    <div class="name">Big Al Gonzales</div>
+    <div class="bio">Marine Corps veteran and Funniest in South Texas 2018. Performed for troops around the world.</div>
+    <div class="cred">Book winner on Kill Tony</div>
+  </div>
+
+  <div class="card">
+    <img src="mio.png" alt="Mio Love">
+    <div class="name">Mio Love</div>
+    <div class="bio">Puerto Rican stand-up, Army veteran, and mother — fearless honesty from military life to motherhood.</div>
+    <div class="cred">Book winner on Kill Tony</div>
+  </div>
+
+  <div class="card">
+    <img src="kris.png" alt="Kris Bolstad">
+    <div class="name">Kris Bolstad</div>
+    <div class="bio">San Antonio host and Texas original — decades of wild stories from a lifetime in the Hill Country.</div>
+    <div class="cred">Book winner on Kill Tony</div>
+  </div>
+
+  <div class="card">
+    <img src="ryan.png" alt="Ryan Shields">
+    <div class="name">Ryan Shields</div>
+    <div class="bio">Road-tested San Antonio comic — toured with headliners, festival alum, appeared on Paramount+'s Landman.</div>
+    <div class="cred">Book winner on Kill Tony</div>
+  </div>
+
+</div>
+
+<div id="book">
+  <a href="mailto:booking@swearjar.com">Book the show</a>
+  <div class="note">Casinos &middot; Comedy clubs &middot; Corporate &amp; private events</div>
+</div>
+
+<a id="home" href="swearjar-min.html">&larr; back</a>
+
+</body>
+</html>
